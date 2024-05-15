@@ -269,6 +269,8 @@ public:
 	virtual String get_caption() const override;
 
 	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+
+	virtual bool has_filter() const override;
 	AnimationNodeBlend3();
 };
 

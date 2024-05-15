@@ -876,16 +876,20 @@ String AnimationNodeBlend3::get_caption() const {
 	return "Blend3";
 }
 
+bool AnimationNodeBlend3::has_filter() const {
+	return true;
+}
+
 AnimationNode::NodeTimeInfo AnimationNodeBlend3::_process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only) {
 	double amount = get_parameter(blend_amount);
 
 	AnimationMixer::PlaybackInfo pi = p_playback_info;
 	pi.weight = MAX(0, -amount);
-	NodeTimeInfo nti0 = blend_input(0, pi, FILTER_IGNORE, sync, p_test_only);
+	NodeTimeInfo nti0 = blend_input(0, pi, FILTER_PASS, sync, p_test_only);
 	pi.weight = 1.0 - ABS(amount);
-	NodeTimeInfo nti1 = blend_input(1, pi, FILTER_IGNORE, sync, p_test_only);
+	NodeTimeInfo nti1 = blend_input(1, pi, FILTER_BLEND, sync, p_test_only);
 	pi.weight = MAX(0, amount);
-	NodeTimeInfo nti2 = blend_input(2, pi, FILTER_IGNORE, sync, p_test_only);
+	NodeTimeInfo nti2 = blend_input(2, pi, FILTER_PASS, sync, p_test_only);
 
 	return amount > 0.5 ? nti2 : (amount < -0.5 ? nti0 : nti1); // Hacky but good enough.
 }
